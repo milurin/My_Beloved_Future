@@ -244,6 +244,16 @@
         }
         
         .love-letter .salutation { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic; font-weight: 600; }
+        
+        .letter-signoff {
+            text-align: right;
+            font-weight: bold;
+            color: var(--accent-pink);
+            font-size: 1.35rem;
+            font-style: italic;
+            line-height: 1.6;
+            margin-top: 30px;
+        }
 
         .interactive-btn {
             background: linear-gradient(135deg, var(--soft-pink), var(--accent-pink));
@@ -440,7 +450,7 @@
 
     <!-- Target Audio File -->
     <audio id="romanticSong" loop preload="auto">
-        <source src="loveshinebyLEEHEESANG.mp3" type="audio/mp3">
+        <source src="love_shine_leeheesang.mp3" type="audio/mpeg">
     </audio>
 
     <div class="master-backdrop">
@@ -486,10 +496,18 @@
                 <div class="flower" style="font-size: 1.8rem; float: right; animation-direction: reverse;">🌸</div>
                 <h2 class="letter-title">Happy Girlfriend's Day!</h2>
                 
-                <p class="salutation">My Dearest,</p>
-                <p>Even though my studies keep me physically far away from home right now, my heart hasn't moved an inch from where you are. I might not be able to hand-deliver flowers or take you out to dinner tonight, but I wanted to build this little corner of the internet just for you to show you how much you mean to me.</p>
-                <p>Thank you for being my constant support, my happiest thought, and the best part of my day. Distance is only temporary, but what we share is lasting. Happy Girlfriend's Day, my love!</p>
-                <p style="text-align: right; font-weight: bold; color: var(--accent-pink); font-size: 1.5rem; font-style: italic;">Forever Yours, <br>❤️</p>
+                <p class="salutation">My Dearest Tinaa,</p>
+                <p>Thank you for coming into my life so unexpectedly. Who would've thought that we are destined to be together. We used to be strangers in our previous life, but now you and me are sharing this world together, uncovering the story that we will share for the rest of our life. You are truly one of a kind.</p>
+                <p>Even though we are very far away, but the love we have for each other helped us to go through all of the hard days that went by. I hope that one day, we can see the world together side by side without having any distance between us. i want us to have a happy life, see how fun it is to travel the world, how cute it is to see our children playing in the backyard as we sat down and laughing at each other.</p>
+                <p>For every sweet moments that we have since the first day we we're together, are the moments that i will forever cherish. I really cherish you sayang. I know that i will never find someone like you anymore.</p>
+                <p>i might not be able to give you flowers or take you out to dinner, but i can give this envelope to show you how much you really mean to me.</p>
+                <p>Thank you for being my constant support, my happiest thought, and the best part of my day and life. You are the sweetest, kindest, prettiest, cutest and caring person i ever had. thank you for always understand my side. Distance is only temporary, but what we share will be forever lasting. i love you.</p>
+                <p>Happy Girlfriend's Day, sayang! &lt;3</p>
+                
+                <div class="letter-signoff">
+                    Forever Yours,<br>
+                    pitoo &lt;3
+                </div>
             </section>
 
             <button class="interactive-btn" onclick="revealSurprise()">Click for a Hug!</button>
@@ -642,12 +660,11 @@
         function startFadeInMusic() {
             const audio = document.getElementById("romanticSong");
             
-            // Mobile Optimization: Initialize with safety fallbacks
             audio.muted = true; 
             audio.volume = 0;
             
             audio.play().then(() => {
-                audio.muted = false; // Lift modern browser mute restriction safely
+                audio.muted = false; 
                 isMusicPlaying = true;
                 document.getElementById("musicBtn").innerText = "🎵";
                 
@@ -687,7 +704,6 @@
 
             if(wrapper.classList.contains('open-flap')) return;
 
-            // Instantly start audio processing from user tap event loop
             startFadeInMusic();
 
             wrapper.classList.remove("fresh-load");
@@ -837,10 +853,9 @@
             heart.style.willChange = 'transform';
             heart.animate([ { transform: 'translate3d(0, 0, 0) rotate(0deg)', opacity: 0 }, { opacity: 0.6, offset: 0.2 }, { transform: `translate3d(${Math.random() * 60 - 30}px, -110vh, 0) rotate(360deg)`, opacity: 0 } ], { duration: Math.random() * 4000 + 5000, easing: 'linear' });
             document.getElementById('heartBg').appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 9000);
+            setTimeout(() => { heart.remove(); }, 900);
         }
         
-        // Mobile Safe lower interval footprint to ensure high smooth rendering frame rates
         const ambientRate = window.innerWidth < 600 ? 2400 : 1400;
         setInterval(createAmbientHeart, ambientRate);
     </script>
