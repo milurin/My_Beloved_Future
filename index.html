@@ -89,15 +89,11 @@
             top: 0; left: 0; width: 100%; height: 100%;
         }
 
-        /* --- HEADERS --- */
+        /* --- HEADERS (WITH BRIGHTENING HIGHLIGHT CONTEXT) --- */
         header {
             margin-bottom: 60px;
             animation: elegantFadeInDown 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transition: opacity 2s ease;
-        }
-
-        body.envelope-focus header {
-            opacity: 0.2; 
+            transition: opacity 2s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         h1 {
@@ -108,6 +104,7 @@
             font-size: 3rem;
             margin-bottom: 12px;
             text-shadow: 2px 2px 15px rgba(255, 255, 255, 0.9);
+            transition: color 3s ease, text-shadow 3s ease;
         }
 
         .subtitle {
@@ -116,9 +113,20 @@
             font-size: 1.25rem;
             color: #8c7377;
             letter-spacing: 0.5px;
+            transition: color 3s ease, text-shadow 3s ease;
         }
 
-        /* --- STABLE 2.5D FLAT-LAYERED ENVELOPE ASSEMBLY --- */
+        /* Shift text colors to a brighter state against the dark backdrop */
+        body.envelope-focus h1 {
+            color: #ff9ebb;
+            text-shadow: 0 0 20px rgba(255, 158, 187, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
+        }
+        body.envelope-focus .subtitle {
+            color: #ffccd5;
+            text-shadow: 0 0 10px rgba(255, 204, 213, 0.4);
+        }
+
+        /* --- FLAT-LAYERED ENVELOPE ASSEMBLY --- */
         .envelope-sandbox {
             height: 320px;
             display: flex;
@@ -137,7 +145,7 @@
             border-radius: 0 0 12px 12px;
             box-shadow: 0 20px 45px rgba(255, 114, 149, 0.35);
             cursor: pointer;
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.8s ease;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.8s ease, opacity 1s ease;
             border: 1px solid rgba(255, 255, 255, 0.4);
             transform-style: preserve-3d;
         }
@@ -239,12 +247,12 @@
             filter: blur(10px);
         }
 
-        /* --- LUXURY GLASSMORPHIC POP-UP LETTER WITH SLOW FADE --- */
+        /* --- LUXURY GLASSMORPHIC POP-UP LETTER --- */
         .hidden-content {
             display: none;
             opacity: 0;
             transform: translateY(40px);
-            transition: opacity 2s cubic-bezier(0.25, 1, 0.5, 1), transform 2s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1), transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .hidden-content.show {
@@ -300,36 +308,37 @@
             box-shadow: 0 12px 25px rgba(255, 133, 162, 0.5);
         }
 
-        /* --- UPDATED: ULTRA-SMOOTH EXPANSION GRID CONTAINER --- */
+        /* --- UPDATED: ULTRA-SMOOTH EXPANSION AND FADE MECHANICS FOR HUG BOX --- */
         .surprise-wrapper {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-15px);
+            transition: max-height 0.75s cubic-bezier(0.25, 1, 0.5, 1), 
+                        opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.75s cubic-bezier(0.25, 1, 0.5, 1),
+                        margin 0.75s cubic-bezier(0.25, 1, 0.5, 1);
             overflow: hidden;
             margin-top: 0;
+            margin-bottom: 0;
         }
         .surprise-wrapper.expanded {
-            grid-template-rows: 1fr;
+            max-height: 300px; /* Large enough to hold the box content comfortably */
+            opacity: 1;
+            transform: translateY(0);
             margin-top: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         #surprise-message {
-            min-height: 0;
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(8px);
-            padding: 0 25px; 
+            padding: 25px; 
             border-radius: 24px;
-            border: 0px dashed var(--accent-pink); 
-            transition: padding 0.65s cubic-bezier(0.25, 1, 0.5, 1), border-width 0.1s;
+            border: 2px dashed var(--accent-pink); 
             font-style: italic;
-            box-shadow: 0 10px 25px rgba(255, 140, 165, 0.05);
-        }
-        .surprise-wrapper.expanded #surprise-message {
-            padding: 25px;
-            border: 2px dashed var(--accent-pink);
+            box-shadow: 0 10px 25px rgba(255, 140, 165, 0.08);
         }
 
-        /* --- UPDATED: WHITE FONT AND CUTE FOLDER LAYOUT --- */
+        /* --- CUTE FOLDER LAYOUT & SPINNING SAKURA --- */
         .gallery-title { 
             color: var(--white); 
             margin: 60px 0 35px; 
@@ -344,7 +353,7 @@
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
             gap: 30px; 
-            margin-bottom: 40px; 
+            margin-bottom: 50px; 
         }
 
         .cute-folder {
@@ -362,7 +371,6 @@
             border: 2px solid #ffe3e8;
         }
 
-        /* The cute top tab of the folder */
         .cute-folder::before {
             content: '';
             position: absolute;
@@ -377,13 +385,16 @@
             transform-origin: bottom left;
         }
 
+        /* UPDATED: Spinning Sakura placement inside folder previews */
         .cute-folder .folder-content-preview {
             position: absolute;
             top: 25%; left: 50%;
-            transform: translate(-50%, -10px) scale(0.8);
+            transform: translate(-50%, -10px);
             font-size: 3rem;
             opacity: 0.6;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+            animation: spin 10s linear infinite;
         }
 
         .cute-folder:hover {
@@ -396,7 +407,7 @@
             transform: skewX(-10deg);
         }
         .cute-folder:hover .folder-content-preview {
-            transform: translate(-50%, -22px) scale(1.1);
+            transform: translate(-50%, -22px);
             opacity: 1;
         }
 
@@ -477,7 +488,6 @@
             margin-bottom: 20px;
         }
 
-        /* Slider elements */
         .slider-viewport {
             width: 100%;
             height: 280px;
@@ -510,7 +520,6 @@
             pointer-events: auto;
         }
 
-        /* Romantic inner frame representation */
         .photo-frame-visual {
             width: 90%;
             height: 80%;
@@ -535,7 +544,6 @@
             color: #7d6569;
         }
 
-        /* Cute cute directional buttons */
         .slider-nav-container {
             display: flex;
             justify-content: space-between;
@@ -574,6 +582,66 @@
             font-style: italic;
         }
 
+        /* --- NEW: REOPEN LOOP BACK TO START BUTTON --- */
+        .reopen-container {
+            margin: 40px auto 20px;
+            padding-top: 20px;
+        }
+        .reopen-btn {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.75);
+            border: 1px dashed rgba(255, 255, 255, 0.4);
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            transition: all 0.4s ease;
+        }
+        .reopen-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: white;
+            transform: scale(1.03);
+        }
+
+        /* --- NEW: MUSIC CONTROLLER LAYOUT BOTTOM LEFT --- */
+        .music-toggle-container {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .music-toggle-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .music-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px solid var(--soft-pink);
+            box-shadow: 0 8px 20px rgba(255, 133, 162, 0.25);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+        }
+        .music-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+            background: white;
+            box-shadow: 0 10px 25px rgba(255, 133, 162, 0.4);
+        }
+
         .hint-text { 
             font-family: 'Playfair Display', serif;
             font-style: italic;
@@ -606,6 +674,11 @@
 </head>
 <body>
 
+    <!-- Embedded Background Audio Elements (Add your source URL here) -->
+    <audio id="romanticSong" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="master-backdrop">
         <div class="bg-flower-container">
             <div class="bg-flower f1">🌸</div>
@@ -614,6 +687,11 @@
             <div class="bg-flower f4">🌸</div>
         </div>
         <div class="heart-bg" id="heartBg"></div>
+    </div>
+
+    <!-- Floating Audio Switch Bottom Left -->
+    <div class="music-toggle-container" id="musicContainer">
+        <button class="music-btn" id="musicBtn" onclick="toggleMusicControl()">🎵</button>
     </div>
 
     <div class="container">
@@ -661,38 +739,40 @@
                 </div>
             </div>
 
-            <!-- UPDATED: White Header text applied here -->
             <h2 class="gallery-title">🌸 Our Happy Memories 🌸</h2>
             
-            <!-- NEW: 3 Cute Custom Animated Folders -->
+            <!-- 3 Custom Animated Folders with gently spinning sakuras -->
             <div class="folders-container">
                 <div class="cute-folder" onclick="openFolderGallery('smiles')">
-                    <div class="folder-content-preview">✨</div>
+                    <div class="folder-content-preview">🌸</div>
                     <div class="folder-name">Your Smiles</div>
                 </div>
                 <div class="cute-folder" onclick="openFolderGallery('pictures')">
-                    <div class="folder-content-preview">📸</div>
+                    <div class="folder-content-preview">🌸</div>
                     <div class="folder-name">Your Pictures</div>
                 </div>
                 <div class="cute-folder" onclick="openFolderGallery('stories')">
-                    <div class="folder-content-preview">📖</div>
+                    <div class="folder-content-preview">🌸</div>
                     <div class="folder-name">Our Stories Together</div>
                 </div>
+            </div>
+
+            <!-- REOPEN BACK TO START BUTTON -->
+            <div class="reopen-container">
+                <button class="reopen-btn" onclick="resetPageToStart()">reopen it as much as you want sayangg</button>
             </div>
 
         </div>
 
     </div>
 
-    <!-- NEW: Pop-up Slider Gallery System -->
+    <!-- Pop-up Slider Gallery System -->
     <div class="gallery-modal" id="galleryModal">
         <div class="modal-body">
             <button class="modal-close-btn" onclick="closeFolderGallery()">✕</button>
             <h3 class="modal-title" id="modalTitle">Folder Gallery</h3>
             
-            <div class="slider-viewport" id="sliderViewport">
-                <!-- Javascript will load 10 custom cards inside here dynamically -->
-            </div>
+            <div class="slider-viewport" id="sliderViewport"></div>
             
             <div class="slider-nav-container">
                 <button class="cute-nav-btn" onclick="changeSlide(-1)">◀ Prev</button>
@@ -703,7 +783,7 @@
     </div>
 
     <script>
-        // Gallery Database Config (10 Items Per Section)
+        // Gallery Content Configuration
         const galleryData = {
             smiles: {
                 title: "Your Smiles 🌸",
@@ -754,6 +834,7 @@
 
         let currentActiveFolder = '';
         let currentSlideIndex = 0;
+        let isMusicPlaying = false;
 
         function openFolderGallery(folderKey) {
             currentActiveFolder = folderKey;
@@ -761,9 +842,8 @@
             
             const data = galleryData[folderKey];
             document.getElementById('modalTitle').innerText = data.title;
-            
             const viewport = document.getElementById('sliderViewport');
-            viewport.innerHTML = ''; // Reset container
+            viewport.innerHTML = '';
             
             data.items.forEach((item, index) => {
                 const slide = document.createElement('div');
@@ -786,7 +866,6 @@
         function changeSlide(direction) {
             const slides = document.querySelectorAll('.slide-item');
             if (slides.length === 0) return;
-
             slides[currentSlideIndex].classList.remove('active');
             
             currentSlideIndex += direction;
@@ -801,15 +880,133 @@
             document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / 10`;
         }
 
-        // --- HUG SURPRISE REVEAL (SMOOTH SLIDE) ---
+        // HUG SURPRISE EXPANSION
         function revealSurprise() {
             const wrapper = document.getElementById("surpriseWrapper");
             wrapper.classList.toggle("expanded");
         }
 
+        // --- MUSIC ENGINE CONTROLS ---
+        function startFadeInMusic() {
+            const audio = document.getElementById("romanticSong");
+            audio.volume = 0;
+            audio.play().then(() => {
+                isMusicPlaying = true;
+                document.getElementById("musicBtn").innerText = "🎵";
+                let fadeInterval = setInterval(() => {
+                    if (audio.volume < 0.8) {
+                        audio.volume = Math.min(audio.volume + 0.05, 0.8);
+                    } else {
+                        clearInterval(fadeInterval);
+                    }
+                }, 150);
+            }).catch(e => console.log("Audio block wait: Interacted launch handled."));
+        }
+
+        function toggleMusicControl() {
+            const audio = document.getElementById("romanticSong");
+            const btn = document.getElementById("musicBtn");
+            if (isMusicPlaying) {
+                audio.pause();
+                btn.innerText = "🔇";
+                isMusicPlaying = false;
+            } else {
+                audio.play();
+                btn.innerText = "🎵";
+                isMusicPlaying = true;
+            }
+        }
+
+        // --- MASTER OPEN REVEAL FLOW ---
+        function executeGrandReveal() {
+            const sandbox = document.getElementById("envelopeSandbox");
+            const wrapper = document.getElementById("envelopeWrapper");
+            const hint = document.getElementById("clickHint");
+            const content = document.getElementById("secretContent");
+            const musicBox = document.getElementById("musicContainer");
+
+            if(wrapper.classList.contains('open-flap')) return;
+
+            document.body.classList.add("envelope-focus"); 
+            wrapper.classList.add("open-flap");
+            hint.style.opacity = "0";
+
+            // Audio system initialization upon opening click
+            startFadeInMusic();
+
+            setTimeout(() => { wrapper.classList.add("flap-opened-back"); }, 600); 
+            setTimeout(() => { wrapper.classList.add("slide-out-paper"); }, 1200); 
+            setTimeout(() => { sandbox.classList.add("dissolve"); }, 3000);
+
+            setTimeout(() => {
+                sandbox.style.display = "none";
+                hint.style.display = "none";
+                content.classList.add("show");
+                musicBox.classList.add("visible");
+                
+                setTimeout(() => {
+                    content.style.opacity = "1";
+                    content.style.transform = "translateY(0)";
+                }, 50);
+                
+                for (let i = 0; i < 45; i++) {
+                    setTimeout(createConfettiParticle, i * 35);
+                }
+            }, 4100);
+        }
+
+        // --- NEW: CINEMATIC RESET FLOW (BACK TO START) ---
+        function resetPageToStart() {
+            const content = document.getElementById("secretContent");
+            const sandbox = document.getElementById("envelopeSandbox");
+            const wrapper = document.getElementById("envelopeWrapper");
+            const hint = document.getElementById("clickHint");
+            const musicBox = document.getElementById("musicContainer");
+            const audio = document.getElementById("romanticSong");
+            const hugWrapper = document.getElementById("surpriseWrapper");
+
+            // 1. Instantly close inner surprise panels safely
+            hugWrapper.classList.remove("expanded");
+
+            // 2. Soft fade out the core main page contents
+            content.style.opacity = "0";
+            content.style.transform = "translateY(30px)";
+            musicBox.classList.remove("visible");
+
+            // 3. Fade out the playing music tracks
+            let fadeOutInterval = setInterval(() => {
+                if (audio.volume > 0.05) {
+                    audio.volume -= 0.05;
+                } else {
+                    clearInterval(fadeOutInterval);
+                    audio.pause();
+                    audio.currentTime = 0;
+                    isMusicPlaying = false;
+                }
+            }, 100);
+
+            // 4. Restore setup state after fade completes
+            setTimeout(() => {
+                content.classList.remove("show");
+                document.body.classList.remove("envelope-focus"); // Brightens background
+
+                // Re-assemble sandbox layout structurally
+                sandbox.style.display = "flex";
+                hint.style.display = "block";
+                
+                // Animate elements back into baseline positions
+                setTimeout(() => {
+                    sandbox.classList.remove("dissolve");
+                    wrapper.className = "envelope-wrapper"; // Cleans up layout flags completely
+                    hint.style.opacity = "1";
+                }, 100);
+
+            }, 1500);
+        }
+
+        // Dynamic Interactive Spark System
         document.body.addEventListener('click', function(e) {
-            // Stop bubble bursts if interacting with modal buttons
-            if(e.target.closest('.modal-body') || e.target.closest('.cute-folder')) return;
+            if(e.target.closest('.modal-body') || e.target.closest('.cute-folder') || e.target.closest('.reopen-btn')) return;
             const particles = 6;
             for(let i=0; i < particles; i++) {
                 createLoveShowerParticle(e.clientX, e.clientY);
@@ -833,47 +1030,6 @@
             setTimeout(() => { love.remove(); }, 900);
         }
 
-        function executeGrandReveal() {
-            const sandbox = document.getElementById("envelopeSandbox");
-            const wrapper = document.getElementById("envelopeWrapper");
-            const hint = document.getElementById("clickHint");
-            const content = document.getElementById("secretContent");
-
-            if(wrapper.classList.contains('open-flap')) return;
-
-            document.body.classList.add("envelope-focus"); 
-            wrapper.classList.add("open-flap");
-            hint.style.opacity = "0";
-
-            setTimeout(() => {
-                wrapper.classList.add("flap-opened-back");
-            }, 600); 
-
-            setTimeout(() => {
-                wrapper.classList.add("slide-out-paper");
-            }, 1200); 
-
-            setTimeout(() => {
-                sandbox.classList.add("dissolve");
-            }, 3000);
-
-            setTimeout(() => {
-                sandbox.style.display = "none";
-                hint.style.display = "none";
-                
-                content.classList.add("show");
-                
-                setTimeout(() => {
-                    content.style.opacity = "1";
-                    content.style.transform = "translateY(0)";
-                }, 50);
-                
-                for (let i = 0; i < 45; i++) {
-                    setTimeout(createConfettiParticle, i * 35);
-                }
-            }, 4100);
-        }
-
         function createConfettiParticle() {
             const confetti = document.createElement('div');
             confetti.classList.add('confetti');
@@ -882,7 +1038,6 @@
             confetti.style.top = '105vh';
             confetti.style.fontSize = (Math.random() * 20 + 20) + 'px';
             confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            
             document.body.appendChild(confetti);
             setTimeout(() => { confetti.remove(); }, 4000);
         }
