@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>To My Dearest Beloved Partner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +29,7 @@
             overflow-x: hidden;
             min-height: 100vh;
             background-color: #0d090a; 
+            -webkit-tap-highlight-color: transparent; /* Fixes blue flash on mobile tap */
         }
 
         /* --- IMMERSIVE MASTER BACKDROP CONTAINER --- */
@@ -172,7 +173,6 @@
             transition: transform 0.6s cubic-bezier(0.34, 1.6, 0.64, 1), opacity 0.4s ease;
         }
 
-        /* When envelope is freshly loaded on startup, make seal visible */
         .envelope-wrapper.fresh-load .envelope-seal {
             transform: scale(1);
             opacity: 1;
@@ -207,12 +207,14 @@
         .hidden-content {
             display: none; opacity: 0; transform: translateY(40px);
             transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1), transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-top: -30px; /* Pulls content up since top header disappears */
         }
 
         .hidden-content.show { display: block; }
 
         .love-letter {
             background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             padding: 50px 40px; border-radius: 35px; margin-bottom: 25px; line-height: 1.9; font-size: 1.25rem; text-align: left;
             box-shadow: 0 30px 60px rgba(255, 140, 165, 0.2), inset 0 0 0 1px rgba(255,255,255,0.6);
         }
@@ -241,7 +243,7 @@
             overflow: hidden; margin-top: 0; margin-bottom: 0;
         }
         .surprise-wrapper.expanded {
-            max-height: 300px; opacity: 1; transform: translateY(0); margin-top: 20px; margin-bottom: 30px;
+            max-height: 400px; opacity: 1; transform: translateY(0); margin-top: 20px; margin-bottom: 30px;
         }
         #surprise-message {
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); padding: 25px; border-radius: 24px;
@@ -379,11 +381,45 @@
         }
         .confetti { position: fixed; z-index: 100; pointer-events: none; animation: floatUpConfetti linear forwards; }
         @keyframes clickBurst { 0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; } 100% { transform: translate(var(--mx), var(--my)) scale(1.3); opacity: 0; } }
+
+        /* ==========================================================================
+           📱 MOBILE & RESPONSIVE REFINEMENTS (Perfect for Github Pages View)
+           ========================================================================== */
+        @media screen and (max-width: 600px) {
+            .container { padding: 20px 12px; }
+            
+            header { margin-bottom: 35px; }
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1.05rem; }
+
+            .envelope-sandbox { height: 260px; margin-bottom: 30px; }
+            .envelope-wrapper { width: 250px; height: 160px; max-width: 90vw; }
+            .envelope-wrapper::before { border-width: 80px 125px 80px 125px; }
+            .envelope-flap { width: 252px; height: 85px; }
+            .envelope-seal { top: 67px; left: 108px; }
+            .mini-letter { width: 210px; height: 130px; left: 20px; }
+            .mini-letter p { font-size: 1.15rem; }
+            .envelope-wrapper.slide-out-paper .mini-letter { transform: translateY(-135px) scale(1.05); }
+
+            .hidden-content { margin-top: -10px; }
+            .love-letter { padding: 30px 20px; font-size: 1.1rem; border-radius: 24px; }
+            .letter-title { font-size: 1.9rem; margin-bottom: 20px; }
+            
+            .folders-container { grid-template-columns: 1fr; gap: 20px; }
+            .cute-folder { height: 130px; }
+            
+            .modal-body { padding: 20px 15px; width: 95%; }
+            .slider-viewport { height: 230px; }
+            .photo-frame-visual { font-size: 1rem; }
+            
+            .gallery-title { font-size: 1.9rem; margin: 40px 0 20px; }
+            .interactive-btn { width: 100%; padding: 14px 20px; font-size: 1.1rem; }
+        }
     </style>
 </head>
 <body>
 
-    <audio id="romanticSong" loop>
+    <audio id="romanticSong" loop preload="auto">
         <source src="love_shine_leeheesang.mp3" type="audio/mpeg">
     </audio>
 
@@ -409,7 +445,6 @@
         </header>
 
         <div class="envelope-sandbox" id="envelopeSandbox">
-            <!-- added fresh-load to showcase seal on first mount -->
             <div class="envelope-wrapper fresh-load" id="envelopeWrapper" onclick="executeGrandReveal()">
                 <div class="envelope-inner-back"></div>
                 <div class="envelope-flap"></div>
@@ -597,7 +632,7 @@
                         clearInterval(fadeInterval);
                     }
                 }, 150);
-            }).catch(e => console.log("Audio waiting for interaction."));
+            }).catch(e => console.log("Audio waiting for mobile tap."));
         }
 
         function toggleMusicControl() {
@@ -624,9 +659,7 @@
 
             if(wrapper.classList.contains('open-flap')) return;
 
-            // Remove fresh load class if it's there
             wrapper.classList.remove("fresh-load");
-
             document.body.classList.add("envelope-focus"); 
             wrapper.classList.add("open-flap");
             hint.style.opacity = "0";
@@ -650,10 +683,11 @@
                 setTimeout(() => {
                     content.style.opacity = "1";
                     content.style.transform = "translateY(0)";
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Helps mobile positioning
                 }, 50);
                 
-                for (let i = 0; i < 45; i++) {
-                    setTimeout(createConfettiParticle, i * 35);
+                for (let i = 0; i < 35; i++) { // Slightly optimized count for mobile performance
+                    setTimeout(createConfettiParticle, i * 40);
                 }
             }, 4100);
         }
@@ -669,17 +703,14 @@
             const seal = document.getElementById("envelopeSeal");
             const header = document.getElementById("mainHeader");
 
-            // Ensure manual hidden setup so it won't pop in early
             seal.style.opacity = "0";
             seal.style.transform = "scale(0)";
-
             hugWrapper.classList.remove("expanded");
 
-            // Synchronized smooth dissolution layout fade out
             content.style.opacity = "0";
             content.style.transform = "translateY(30px)";
             musicBox.classList.remove("visible");
-            document.body.classList.remove("envelope-focus"); // Restores standard header colors automatically
+            document.body.classList.remove("envelope-focus");
 
             let fadeOutInterval = setInterval(() => {
                 if (audio.volume > 0.05) {
@@ -692,7 +723,6 @@
                 }
             }, 100);
 
-            // Sequential Anti-Clipping Re-folding Execution
             setTimeout(() => {
                 content.classList.remove("show");
                 sandbox.style.display = "flex"; 
@@ -701,28 +731,23 @@
                     sandbox.classList.remove("dissolve");
                     hint.style.display = "block";
                     
-                    // Smoothly fade the main top title header back down into visibility
                     header.style.opacity = "1";
                     header.style.transform = "translateY(0)";
                     
                     setTimeout(() => {
-                        // Step A: Slide the card paper deep inside the container smoothly
                         wrapper.classList.remove("slide-out-paper");
                         
                         setTimeout(() => {
-                            // Step B: Update z-index layer rules once letter completely settles inside
                             wrapper.classList.remove("flap-opened-back");
                             
                             setTimeout(() => {
-                                // Step C: Rotate the top outer flap down fully closed over the body
                                 wrapper.classList.remove("open-flap");
                                 hint.style.opacity = "1";
                                 
-                                // Step D: Flap has fully finished rotating closed! Bubbly elastic seal pops up instantly!
                                 setTimeout(() => {
                                     seal.style.opacity = "1";
                                     seal.style.transform = "scale(1)";
-                                }, 1200); // Triggered perfectly after the flap closing transition finishes
+                                }, 1200);
 
                             }, 200); 
 
@@ -735,9 +760,10 @@
             }, 1500); 
         }
 
+        // Optimized event handler for seamless mobile tapping
         document.body.addEventListener('click', function(e) {
-            if(e.target.closest('.modal-body') || e.target.closest('.cute-folder') || e.target.closest('.reopen-btn')) return;
-            const particles = 6;
+            if(e.target.closest('.modal-body') || e.target.closest('.cute-folder') || e.target.closest('.reopen-btn') || e.target.closest('.interactive-btn') || e.target.closest('.music-btn')) return;
+            const particles = window.innerWidth < 600 ? 4 : 6; // Fewer particles on mobile for better performance
             for(let i=0; i < particles; i++) { createLoveShowerParticle(e.clientX, e.clientY); }
         });
 
@@ -747,9 +773,9 @@
             love.innerText = Math.random() > 0.5 ? '❤️' : '🌸';
             love.style.left = x + 'px';
             love.style.top = y + window.scrollY + 'px';
-            love.style.fontSize = Math.random() * 12 + 12 + 'px';
-            const moveX = (Math.random() * 140 - 70) + 'px';
-            const moveY = (Math.random() * -140 - 20) + 'px';
+            love.style.fontSize = Math.random() * 10 + 12 + 'px';
+            const moveX = (Math.random() * 120 - 60) + 'px';
+            const moveY = (Math.random() * -120 - 20) + 'px';
             love.style.setProperty('--mx', moveX);
             love.style.setProperty('--my', moveY);
             document.body.appendChild(love);
@@ -762,10 +788,10 @@
             confetti.innerText = Math.random() > 0.5 ? '🌸' : '❤️';
             confetti.style.left = (Math.random() * 80 + 10) + 'vw';
             confetti.style.top = '105vh';
-            confetti.style.fontSize = (Math.random() * 20 + 20) + 'px';
-            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            confetti.style.fontSize = (Math.random() * 15 + 15) + 'px';
+            confetti.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
             document.body.appendChild(confetti);
-            setTimeout(() => { confetti.remove(); }, 4000);
+            setTimeout(() => { confetti.remove(); }, 3500);
         }
 
         function createAmbientHeart() {
@@ -775,12 +801,15 @@
             heart.innerText = Math.random() > 0.5 ? '🌸' : '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.bottom = '-50px';
-            heart.style.fontSize = Math.random() * 15 + 15 + 'px';
-            heart.animate([ { transform: 'translateY(0) rotate(0deg)', opacity: 0 }, { opacity: 0.6, offset: 0.2 }, { transform: `translateY(-110vh) translateX(${Math.random() * 80 - 40}px) rotate(360deg)`, opacity: 0 } ], { duration: Math.random() * 5000 + 5000, easing: 'linear' });
+            heart.style.fontSize = Math.random() * 12 + 12 + 'px';
+            heart.animate([ { transform: 'translateY(0) rotate(0deg)', opacity: 0 }, { opacity: 0.6, offset: 0.2 }, { transform: `translateY(-110vh) translateX(${Math.random() * 60 - 30}px) rotate(360deg)', opacity: 0 } ], { duration: Math.random() * 4000 + 5000, easing: 'linear' });
             document.getElementById('heartBg').appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 10000);
+            setTimeout(() => { heart.remove(); }, 9000);
         }
-        setInterval(createAmbientHeart, 1400);
+        
+        // Slightly spaced out intervals on mobile to keep things buttery smooth
+        const ambientRate = window.innerWidth < 600 ? 2000 : 1400;
+        setInterval(createAmbientHeart, ambientRate);
     </script>
 </body>
 </html>
