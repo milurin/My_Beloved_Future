@@ -576,6 +576,105 @@
         let currentSlideIndex = 0;
         let isMusicPlaying = false;
 
+        // --- ENVELOPE OPENING MECHANICS ---
+        function executeGrandReveal() {
+            const wrapper = document.getElementById('envelopeWrapper');
+            const hint = document.getElementById('clickHint');
+            
+            if(wrapper.classList.contains('open-flap')) return; // Already opened
+            
+            // 1. Play Music instantly upon interaction
+            const music = document.getElementById('romanticSong');
+            music.play().then(() => {
+                isMusicPlaying = true;
+                document.getElementById('musicBtn').innerText = "⏸️";
+                document.getElementById('musicContainer').classList.add('visible');
+            }).catch(e => console.log("Audio autoplay prevented, toggle manually."));
+            
+            // 2. Animate Flap Open
+            wrapper.classList.remove('fresh-load');
+            wrapper.classList.add('open-flap');
+            hint.style.opacity = '0';
+            document.body.classList.add('envelope-focus');
+            
+            // 3. Bring flap to back layer after rotation completion
+            setTimeout(() => {
+                wrapper.classList.add('flap-opened-back');
+            }, 600);
+
+            // 4. Slide out the tiny preview card
+            setTimeout(() => {
+                wrapper.classList.add('slide-out-paper');
+            }, 1200);
+
+            // 5. Dissolve envelope and elegantly reveal full pop-up content
+            setTimeout(() => {
+                document.getElementById('envelopeSandbox').classList.add('dissolve');
+                const secret = document.getElementById('secretContent');
+                secret.classList.add('show');
+                
+                // Trigger smooth fade and rise up
+                setTimeout(() => {
+                    secret.style.opacity = '1';
+                    secret.style.transform = 'translate3d(0,0,0)';
+                    triggerConfettiRain();
+                }, 100);
+            }, 2500);
+        }
+
+        // --- BUTTON MECHANICS ---
+        function revealSurprise() {
+            const surprise = document.getElementById('surpriseWrapper');
+            surprise.classList.toggle('expanded');
+        }
+
+        function resetPageToStart() {
+            const wrapper = document.getElementById('envelopeWrapper');
+            const sandbox = document.getElementById('envelopeSandbox');
+            const secret = document.getElementById('secretContent');
+            const hint = document.getElementById('clickHint');
+            
+            secret.style.opacity = '0';
+            secret.style.transform = 'translate3d(0, 40px, 0)';
+            document.getElementById('surpriseWrapper').classList.remove('expanded');
+            
+            setTimeout(() => {
+                secret.classList.remove('show');
+                sandbox.classList.remove('dissolve');
+                wrapper.className = 'envelope-wrapper fresh-load';
+                hint.style.opacity = '1';
+                document.body.classList.remove('envelope-focus');
+            }, 600);
+        }
+
+        function toggleMusicControl() {
+            const music = document.getElementById('romanticSong');
+            const btn = document.getElementById('musicBtn');
+            if(isMusicPlaying) {
+                music.pause();
+                btn.innerText = "🎵";
+            } else {
+                music.play();
+                btn.innerText = "⏸️";
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        function triggerConfettiRain() {
+            for(let i=0; i<40; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.innerText = ['🌸','✨','💖','💝','❤️'][Math.floor(Math.random()*5)];
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+                conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                conf.style.animationDelay = (Math.random() * 1) + 's';
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 5000);
+            }
+        }
+
+        // --- CAROUSEL GALLERY MECHANICS ---
         function openFolderGallery(folderKey) {
             currentActiveFolder = folderKey;
             currentSlideIndex = 0;
@@ -589,7 +688,6 @@
                 const slide = document.createElement('div');
                 slide.className = `slide-item ${index === 0 ? 'active' : ''}`;
                 
-                // FIXED: Changed item.label to a structured img tag pulling from item.src
                 slide.innerHTML = `
                     <div class="photo-frame-visual">
                         <img src="${item.src}" alt="Memory" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
