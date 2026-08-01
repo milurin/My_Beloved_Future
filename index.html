@@ -278,15 +278,19 @@
             border: 2px dashed var(--accent-pink); font-style: italic; box-shadow: 0 10px 25px rgba(255, 140, 165, 0.08);
         }
 
-        /* --- CUTE FOLDER LAYOUT & WANDERING SAKURA --- */
+        /* --- CUTE FOLDER LAYOUT --- */
         .gallery-title { 
             color: var(--white); margin: 60px 0 35px; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 2.6rem; text-shadow: 0 4px 12px rgba(255, 133, 162, 0.4);
         }
         
-        .folders-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-bottom: 50px; }
+        .folders-container { 
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px; 
+        }
 
         .cute-folder {
-            position: relative; background: #fff0f3; height: 160px; border-radius: 0 16px 16px 16px;
+            position: relative; background: #fff0f3; width: 100%; max-width: 320px; height: 160px; border-radius: 0 16px 16px 16px;
             box-shadow: 0 10px 25px rgba(255, 140, 165, 0.15); cursor: pointer; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; border: 2px solid #ffe3e8;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
         }
@@ -432,7 +436,6 @@
             .love-letter { padding: 30px 20px; font-size: 1.1rem; border-radius: 24px; }
             .letter-title { font-size: 1.9rem; margin-bottom: 20px; }
             
-            .folders-container { grid-template-columns: 1fr; gap: 20px; }
             .cute-folder { height: 130px; }
             .cute-folder .folder-content-preview { transform: translate3d(-50%, -10px, 0); }
             .cute-folder:hover .folder-content-preview { transform: translate3d(-50%, -22px, 0); }
@@ -450,7 +453,7 @@
 
     <!-- Target Audio File -->
     <audio id="romanticSong" loop preload="auto">
-        <source src="love_shine_leeheesang.mp3" type="audio/mpeg">
+        <source src="loveshinebyLEEHEESANG.mp3" type="audio/mp3">
     </audio>
 
     <div class="master-backdrop">
@@ -522,14 +525,6 @@
             <h2 class="gallery-title">🌸 Our Happy Memories 🌸</h2>
             
             <div class="folders-container">
-                <div class="cute-folder" onclick="openFolderGallery('smiles')">
-                    <div class="folder-content-preview"><div class="sakura-wander">🌸</div></div>
-                    <div class="folder-name">Your Smiles</div>
-                </div>
-                <div class="cute-folder" onclick="openFolderGallery('pictures')">
-                    <div class="folder-content-preview"><div class="sakura-wander">🌸</div></div>
-                    <div class="folder-name">Your Pictures</div>
-                </div>
                 <div class="cute-folder" onclick="openFolderGallery('stories')">
                     <div class="folder-content-preview"><div class="sakura-wander">🌸</div></div>
                     <div class="folder-name">Our Stories Together</div>
@@ -560,36 +555,6 @@
 
     <script>
         const galleryData = {
-            smiles: {
-                title: "Your Smiles 🌸",
-                items: [
-                    { label: "📸 Smile #1", cap: "The laugh that brightens my whole universe." },
-                    { label: "📸 Smile #2", cap: "Pure joy captured perfectly." },
-                    { label: "📸 Smile #3", cap: "My absolute favorite look of yours." },
-                    { label: "📸 Smile #4", cap: "Even a small smirk makes me melt." },
-                    { label: "📸 Smile #5", cap: "Your sweet crinkled eyes look." },
-                    { label: "📸 Smile #6", cap: "Shining brighter than any diamond." },
-                    { label: "📸 Smile #7", cap: "The laugh that heals my stressful days." },
-                    { label: "📸 Smile #8", cap: "Thinking about you smiling right now." },
-                    { label: "📸 Smile #9", cap: "A radiant, beautiful moment." },
-                    { label: "📸 Smile #10", cap: "Forever keeping this image close to my heart." }
-                ]
-            },
-            pictures: {
-                title: "Your Pictures 💖",
-                items: [
-                    { label: "📸 Picture #1", cap: "Stunning beyond all description." },
-                    { label: "📸 Picture #2", cap: "The prettiest soul inside and out." },
-                    { label: "📸 Picture #3", cap: "Looking cute without even trying." },
-                    { label: "📸 Picture #4", cap: "A memory that lives rent-free in my head." },
-                    { label: "📸 Picture #5", cap: "Simply gorgeous." },
-                    { label: "📸 Picture #6", cap: "My absolute angel." },
-                    { label: "📸 Picture #7", cap: "Sweet and charming as always." },
-                    { label: "📸 Picture #8", cap: "Counting down the moments till next photo." },
-                    { label: "📸 Picture #9", cap: "A snapshot of my happiness." },
-                    { label: "📸 Picture #10", cap: "Every view of you is my favorite view." }
-                ]
-            },
             stories: {
                 title: "Our Stories Together 📖",
                 items: [
@@ -598,11 +563,11 @@
                     { label: "📸 Chapter #3", cap: "Our sweet late-night phone conversations." },
                     { label: "📸 Chapter #4", cap: "Sharing food and endless jokes." },
                     { label: "📸 Chapter #5", cap: "The little moments that mattered the most." },
-                    { label: "📸 Chapter #6", cap: "Weathering the long distance together bravely." },
-                    { label: "📸 Chapter #7", cap: "A daydream about our sweet upcoming reunion." },
-                    { label: "📸 Chapter #8", cap: "Supporting each other through thick and thin." },
-                    { label: "📸 Chapter #9", cap: "Every single day with you is a gift." },
-                    { label: "📸 Chapter #10", cap: "To be continued... forever and always." }
+                    { label: "📸 Chapter #6", cap: "Supporting each other through thick and thin." },
+                    { label: "📸 Chapter #7", cap: "Counting down the days until the distance closes." },
+                    { label: "📸 Chapter #8", cap: "Every text that brings a smile to my face." },
+                    { label: "📸 Chapter #9", cap: "Dreaming about our beautiful future together." },
+                    { label: "📸 Chapter #10", cap: "To many more chapters written hand in hand." }
                 ]
             }
         };
@@ -649,7 +614,8 @@
         }
 
         function updateCounterBadge() {
-            document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / 10`;
+            const maxItems = galleryData[currentActiveFolder]?.items.length || 10;
+            document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / ${maxItems}`;
         }
 
         function revealSurprise() {
