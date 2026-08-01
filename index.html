@@ -161,14 +161,16 @@
             transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), z-index 0.1s linear;
         }
 
+        /* Modified: Smooth bubbly scaling transition + delay handling for reopening sequence */
         .envelope-seal {
             position: absolute; top: 75px; left: 122px; width: 36px; height: 36px;
             background: var(--white); border-radius: 50px;
             display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
             box-shadow: 0 4px 12px rgba(255, 133, 162, 0.3); z-index: 6;
             transform: scale(1);
-            /* Bubbly elastic transition for the pop-in */
-            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+            opacity: 1;
+            transition: transform 0.6s cubic-bezier(0.34, 1.6, 0.64, 1), opacity 0.4s ease;
+            transition-delay: 0s;
         }
 
         .envelope-wrapper:hover {
@@ -177,13 +179,15 @@
 
         .envelope-wrapper.open-flap .envelope-flap { transform: rotateX(180deg); }
         .envelope-wrapper.flap-opened-back .envelope-flap { z-index: 2; }
-        .envelope-wrapper.open-flap .envelope-seal { opacity: 0; transform: scale(0); }
+        
+        /* Hide seal completely when envelope is active/opened */
+        .envelope-wrapper.open-flap .envelope-seal { opacity: 0; transform: scale(0); transition-delay: 0s; }
 
         .mini-letter {
             position: absolute; top: 15px; left: 20px; width: 240px; height: 150px;
             background: var(--white); border-radius: 8px; z-index: 3; padding: 15px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s ease; 
+            transition: transform 1.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s ease; 
             overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         
@@ -258,14 +262,12 @@
             border-radius: 12px 12px 0 0; border: 2px solid #ffe3e8; border-bottom: none; transform-origin: bottom left; transition: transform 0.4s ease;
         }
 
-        /* Hover base positioning for the content preview container */
         .cute-folder .folder-content-preview {
             position: absolute; top: 25%; left: 50%; transform: translate(-50%, -10px);
             font-size: 3rem; opacity: 0.6; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-block;
         }
         
-        /* The random wander animation applied inside the container */
         .sakura-wander {
             display: inline-block;
             animation: randomWander 7s ease-in-out infinite alternate;
@@ -362,7 +364,6 @@
         @keyframes bounceHint { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
         @keyframes pulseGlow { 0%, 100% { text-shadow: 0 0 0px rgba(255,133,162,0); } 50% { text-shadow: 0 0 15px rgba(255,133,162,0.25); } }
         
-        /* New Random Wander for Sakura */
         @keyframes randomWander {
             0% { transform: translate(0, 0) rotate(0deg) scale(1); }
             33% { transform: translate(12px, -12px) rotate(45deg) scale(1.1); }
@@ -380,7 +381,7 @@
 </head>
 <body>
 
-    <!-- Updated Background Audio - Ensure love_shine_leeheesang.mp3 is in the same folder, or replace with exact URL -->
+    <!-- Updated Song Source to Love Shine by LEEHEESANG -->
     <audio id="romanticSong" loop>
         <source src="love_shine_leeheesang.mp3" type="audio/mpeg">
     </audio>
@@ -416,7 +417,7 @@
                     <p>For Your Eyes Only</p>
                 </div>
                 
-                <div class="envelope-seal">💝</div>
+                <div class="envelope-seal" id="envelopeSeal">💝</div>
             </div>
         </div>
         <p class="hint-text" id="clickHint">Tap the envelope to open your surprise ✨</p>
@@ -467,7 +468,7 @@
         </div>
     </div>
 
-    <!-- Gallery Modal Overly Fix (Visibility handles the click bug) -->
+    <!-- Gallery Modal Layer Fix Container -->
     <div class="gallery-modal" id="galleryModal">
         <div class="modal-body">
             <button class="modal-close-btn" onclick="closeFolderGallery()">✕</button>
@@ -484,7 +485,6 @@
     </div>
 
     <script>
-        // Gallery Configuration Data
         const galleryData = {
             smiles: {
                 title: "Your Smiles 🌸",
@@ -596,7 +596,7 @@
                         clearInterval(fadeInterval);
                     }
                 }, 150);
-            }).catch(e => console.log("Audio block wait."));
+            }).catch(e => console.log("Audio waiting for user click interaction."));
         }
 
         function toggleMusicControl() {
@@ -649,7 +649,7 @@
             }, 4100);
         }
 
-        // --- NEW: FLAWLESS, NO-CLIP REVERSE RESET FLOW ---
+        /* --- IMMERSIVE & ANTI-CLIPPING REVERSE TIMING ASSEMBLY --- */
         function resetPageToStart() {
             const content = document.getElementById("secretContent");
             const sandbox = document.getElementById("envelopeSandbox");
@@ -658,17 +658,18 @@
             const musicBox = document.getElementById("musicContainer");
             const audio = document.getElementById("romanticSong");
             const hugWrapper = document.getElementById("surpriseWrapper");
+            const seal = document.getElementById("envelopeSeal");
 
-            // 1. Instantly pack away the hug surprise 
+            // 1. Instantly close down the hug coupon block if open
             hugWrapper.classList.remove("expanded");
 
-            // 2. Beautiful synchronized fade out (Content fades, Dimming lifts)
+            // 2. Everything smoothly fades away while the dim layer clears out simultaneously
             content.style.opacity = "0";
             content.style.transform = "translateY(30px)";
             musicBox.classList.remove("visible");
-            document.body.classList.remove("envelope-focus"); // Sparks the background brightening
+            document.body.classList.remove("envelope-focus");
 
-            // 3. Smooth Audio Fade Out
+            // 3. Audio volume fades out gracefully
             let fadeOutInterval = setInterval(() => {
                 if (audio.volume > 0.05) {
                     audio.volume -= 0.05;
@@ -680,43 +681,45 @@
                 }
             }, 100);
 
-            // 4. Reverse Envelope Assembly Animation!
+            // 4. Step-by-Step Mechanical Envelope Folding
             setTimeout(() => {
-                // Completely hide content out of DOM
-                content.classList.remove("show"); 
-                
-                // Unhide sandbox so we can animate it
-                sandbox.style.display = "flex";
+                content.classList.remove("show");
+                sandbox.style.display = "flex"; // Return wrapper base back to view
                 
                 setTimeout(() => {
-                    // Envelope container fades back into view (still fully opened)
-                    sandbox.classList.remove("dissolve"); 
+                    sandbox.classList.remove("dissolve");
                     hint.style.display = "block";
                     
+                    // Step A: Slide the card paper deep inside the envelope layer safely first (No clipping)
                     setTimeout(() => {
-                        // Step A: Paper slides beautifully back INSIDE
                         wrapper.classList.remove("slide-out-paper");
                         
+                        // Step B: Wait for the card to settle completely inside, then clear background flap layer
                         setTimeout(() => {
-                            // Step B: Paper is safely inside. Bring flap Z-index to the front (NO CLIPPING!)
                             wrapper.classList.remove("flap-opened-back");
                             
-                            // Step C: Flap folds down & Seal pops back bubbly!
-                            wrapper.classList.remove("open-flap");
-                            
-                            // Step D: Show instructions again
-                            hint.style.opacity = "1";
-                            
-                        }, 2000); // Waits for paper to fully slide down
-                        
-                    }, 1000); // Waits for envelope container to fully fade in
-                    
-                }, 50); // Minor CSS reflow pause
+                            // Step C: Lower the outer flap down over the letter safely
+                            setTimeout(() => {
+                                wrapper.classList.remove("open-flap");
+                                hint.style.opacity = "1";
+                                
+                                // Step D: Envelope is closed! Bubbly elastic seal pops up instantly
+                                setTimeout(() => {
+                                    seal.style.opacity = "1";
+                                    seal.style.transform = "scale(1)";
+                                }, 900); // Flap completion sync
+
+                            }, 200); // Small margin to clear the flap stack order
+
+                        }, 1600); // Exactly matches the card entry animation time
+
+                    }, 800); // Delay structure until envelope frame opacity settles
+
+                }, 50);
                 
-            }, 1500); // Waits for the page content fade-out to finish
+            }, 1500); // Matches main site layout container fade transition duration
         }
 
-        // Dynamic Interactive Spark System
         document.body.addEventListener('click', function(e) {
             if(e.target.closest('.modal-body') || e.target.closest('.cute-folder') || e.target.closest('.reopen-btn')) return;
             const particles = 6;
